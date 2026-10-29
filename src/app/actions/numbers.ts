@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { RENTAL_DAYS } from "@/lib/money";
-import { numberProvider } from "@/lib/numbers";
+import { NumberUnavailableError, numberProvider } from "@/lib/numbers";
 import { debit } from "@/lib/wallet";
 
 const ref = () => `vyn_${crypto.randomBytes(10).toString("hex")}`;
@@ -28,6 +28,7 @@ export async function buyNumber(_: BuyState, form: FormData): Promise<BuyState> 
   } catch (e) {
     await db.user.update({ where: { id: user.id }, data: { balanceKobo: { increment: price } } });
     console.error("Number provisioning failed", e);
+    if (e instanceof NumberUnavailableError) return { error: e.message };
     return { error: "Could not get a number right now. You were not charged." };
   }
 
