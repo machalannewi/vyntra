@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Postgres (e.g. Neon). DATABASE_URL is the pooled connection used by the app;
+// DIRECT_URL is the direct connection used for migrations.
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  passwordHash String
+  role         String        @default("USER") // USER | ADMIN
+  balanceKobo  Int           @default(0)
+  createdAt    DateTime      @default(now())
+  numbers      PhoneNumber[]
+  transactions Transaction[]
+}
+
+model Country {
+  code             String        @id // ISO 3166-1 alpha-2, e.g. "US"
+  name             String
+  flag             String
+  dialCode         String
+  priceMonthlyKobo Int
+  active           Boolean       @default(true)
+  numbers          PhoneNumber[]
+}
+
+model PhoneNumber {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  countryCode String
+  country     Country   @relation(fields: [countryCode], references: [code])
+  number      String    @unique
+  providerRef String
+  status      String    @default("ACTIVE") // ACTIVE | EXPIRED | RELEASED
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+  messages    Message[]
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  phoneNumberId String
+  phoneNumber   PhoneNumber @relation(fields: [phoneNumberId], references: [id], onDelete: Cascade)
+  from          String
+  body          String
+  receivedAt    DateTime    @default(now())
+}
+
+model Transaction {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  type       String // TOPUP | PURCHASE | RENEWAL | REFUND
+  amountKobo Int // positive = credit, negative = debit
+  status     String   @default("PENDING") // PENDING | SUCCESS | FAILED
+  reference  String   @unique
+  note       String?
+  createdAt  DateTime @default(now())
+}
