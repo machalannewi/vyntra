@@ -6,10 +6,14 @@ Sells international phone numbers to customers in Nigeria. Customers top up a wa
 
 ### 1. Create the database (Neon, free)
 
+Easiest: in your Vercel project, open **Storage → Create Database → Neon**. Vercel adds `DATABASE_URL` and `DATABASE_URL_UNPOOLED` for you, so skip to step 2.
+
+Or set it up yourself:
+
 1. Sign up at https://neon.tech and create a project. Pick the region closest to your Vercel region, for example Frankfurt (`eu-central-1`).
 2. On the project dashboard, click **Connect**. Copy the connection string twice:
    - with **Connection pooling ON**: this is `DATABASE_URL` (the host contains `-pooler`)
-   - with **Connection pooling OFF**: this is `DIRECT_URL`
+   - with **Connection pooling OFF**: this is `DATABASE_URL_UNPOOLED`
 3. Optional, for local development: in Neon, create a branch called `dev` and put its two URLs in your local `.env`. Then run `npm run db:push` and `npm run db:seed`.
 
 ### 2. Put the code on GitHub
@@ -32,18 +36,18 @@ git push -u origin main
 1. At https://vercel.com/new, import the GitHub repository. Vercel detects Next.js; leave the build settings as they are.
 2. Under **Environment Variables**, add:
 
-| Name | Value |
-| --- | --- |
-| `DATABASE_URL` | Neon pooled URL |
-| `DIRECT_URL` | Neon direct URL |
-| `AUTH_SECRET` | a long random string. Generate a new one; don't reuse the one in your local `.env` |
-| `APP_URL` | your site's address, e.g. `https://vyntra.vercel.app`. No trailing slash. |
-| `PAYSTACK_SECRET_KEY` | `sk_test_...` while testing, `sk_live_...` when you launch |
-| `NUMBER_PROVIDER` | `twilio` |
-| `TWILIO_ACCOUNT_SID` | from the Twilio Console |
-| `TWILIO_AUTH_TOKEN` | from the Twilio Console |
-| `ADMIN_EMAIL` | your real email |
-| `ADMIN_PASSWORD` | a strong password for the admin login |
+| Name                  | Value                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| `DATABASE_URL`          | Neon pooled URL (added automatically by Vercel's Neon integration)                |
+| `DATABASE_URL_UNPOOLED` | Neon direct URL (added automatically by Vercel's Neon integration)                |
+| `AUTH_SECRET`         | a long random string. Generate a new one; don't reuse the one in your local `.env` |
+| `APP_URL`             | your site's address, e.g. `https://vyntra.vercel.app`. No trailing slash.          |
+| `PAYSTACK_SECRET_KEY` | `sk_test_...` while testing, `sk_live_...` when you launch                         |
+| `NUMBER_PROVIDER`     | `twilio`                                                                           |
+| `TWILIO_ACCOUNT_SID`  | from the Twilio Console                                                            |
+| `TWILIO_AUTH_TOKEN`   | from the Twilio Console                                                            |
+| `ADMIN_EMAIL`         | your real email                                                                    |
+| `ADMIN_PASSWORD`      | a strong password for the admin login                                              |
 
 3. Click **Deploy**. Each build creates or updates the database tables, adds the starting countries and creates your admin account. Prices you change in the admin panel are never overwritten.
 4. If your address isn't what you guessed for `APP_URL`, update `APP_URL` and redeploy.
@@ -88,13 +92,13 @@ After changing `prisma/schema.prisma`, run `npm run db:migrate` to create a new 
 
 ## Where things are
 
-| Area | Files |
-| --- | --- |
-| Pages | `src/app` (landing, login/register, `dashboard/*`, `admin`) |
-| Server actions | `src/app/actions/*` (auth, wallet top-up, buy/renew/release, admin) |
-| Payments | `src/lib/paystack.ts`, `src/lib/wallet.ts`, `src/app/api/paystack/callback`, `src/app/api/webhooks/paystack` |
-| Number providers | `src/lib/numbers.ts` (mock and Twilio) |
-| Inbound SMS | `src/app/api/webhooks/twilio/sms` |
-| Database | `prisma/schema.prisma`, `prisma/migrations`, `prisma/seed.mjs` |
+| Area             | Files                                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------------------------ |
+| Pages            | `src/app` (landing, login/register, `dashboard/*`, `admin`)                                                  |
+| Server actions   | `src/app/actions/*` (auth, wallet top-up, buy/renew/release, admin)                                          |
+| Payments         | `src/lib/paystack.ts`, `src/lib/wallet.ts`, `src/app/api/paystack/callback`, `src/app/api/webhooks/paystack` |
+| Number providers | `src/lib/numbers.ts` (mock and Twilio)                                                                       |
+| Inbound SMS      | `src/app/api/webhooks/twilio/sms`                                                                            |
+| Database         | `prisma/schema.prisma`, `prisma/migrations`, `prisma/seed.mjs`                                               |
 
 Amounts are stored as integer kobo. Each wallet top-up is credited exactly once, even if both the redirect and the webhook arrive.
