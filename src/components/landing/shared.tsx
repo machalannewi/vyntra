@@ -2,7 +2,7 @@
 const unsplash = (id: string, w = 1600) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
 
 export const photos = {
-  heroMist: unsplash("1505765050516-f72dcac9c60e", 2000),
+  heroMist: unsplash("1470071459604-3b5ec3a7fe05", 2000),
   blueValley: unsplash("1506744038136-46273834b3fb", 900),
   greenForest: unsplash("1441974231531-c6227db76b6e", 900),
   goldenHaze: unsplash("1469474968028-56623f02e42e", 900),
@@ -10,6 +10,18 @@ export const photos = {
   greenHills: unsplash("1501854140801-50d01698950b", 900),
   rockyForest: unsplash("1511497584788-876760111969", 2000),
   meadow: unsplash("1472214103451-9374bd1c798e", 600),
+};
+
+// One photo per country for the coverage carousel.
+export const countryPhotos: Record<string, string> = {
+  US: unsplash("1496442226666-8d4d0e62e6e9", 700),
+  GB: unsplash("1513635269975-59663e0ac1ad", 700),
+  CA: unsplash("1503614472-8c93d56e92ce", 700),
+  DE: unsplash("1560969184-10fe8719e047", 700),
+  NL: unsplash("1534351590666-13e3e96b5017", 700),
+  FR: unsplash("1502602898657-3e91760cbb34", 700),
+  AU: unsplash("1506973035872-a4ec16b8e8d9", 700),
+  ZA: unsplash("1580060839134-75a5edca2e99", 700),
 };
 
 export type LandingCountry = {

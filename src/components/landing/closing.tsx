@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Reveal } from "@/components/reveal";
 import { RENTAL_DAYS } from "@/lib/money";
+import { InViewGroup } from "./motion";
 import { Eyebrow, photos } from "./shared";
 
 const included = [
@@ -29,9 +30,13 @@ const faqs = [
   },
 ];
 
-function ImagePill({ src }: { src: string }) {
+/** A photo inside the heading. It starts closed, then widens and pushes the words apart once the text is in. */
+function ImagePill({ src, delay }: { src: string; delay: number }) {
   return (
-    <span className="mx-2 inline-block h-[0.8em] w-[1.9em] translate-y-[0.08em] overflow-hidden rounded-full align-baseline shadow-[0_8px_24px_rgba(0,0,0,0.15)]">
+    <span
+      className="mx-0 inline-block h-[0.8em] w-0 translate-y-[0.08em] overflow-hidden rounded-full align-baseline opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[shown=true]:mx-2 group-data-[shown=true]:w-[1.9em] group-data-[shown=true]:opacity-100"
+      style={{ transitionDelay: `${delay}ms` }}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
     </span>
@@ -45,11 +50,13 @@ export function Closing({ ctaHref, loggedIn }: { ctaHref: string; loggedIn: bool
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-8">
           <Reveal><Eyebrow className="text-black/40">Get started</Eyebrow></Reveal>
           <Reveal delay={100}>
-            <h2 className="mt-5 text-[2.2rem] font-medium leading-[1.1] tracking-[-0.045em] sm:text-6xl">
-              <span className="text-black/30">Your number <ImagePill src={photos.greenHills} /> abroad.</span>
-              <br />
-              Ready in minutes <ImagePill src={photos.meadow} />
-            </h2>
+            <InViewGroup amount={0.8}>
+              <h2 className="mt-5 text-[2.2rem] font-medium leading-[1.1] tracking-[-0.045em] sm:text-6xl">
+                <span className="text-black/30">Your number<ImagePill src={photos.greenHills} delay={1100} /> abroad.</span>
+                <br />
+                Ready in minutes<ImagePill src={photos.meadow} delay={1500} />
+              </h2>
+            </InViewGroup>
           </Reveal>
           <Reveal delay={200}>
             <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-black/40">

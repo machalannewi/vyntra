@@ -1,6 +1,7 @@
 import { Flag } from "@/components/flag";
 import { Reveal } from "@/components/reveal";
-import { naira } from "@/lib/money";
+import { HandoffCard } from "./handoff";
+import { Counter } from "./motion";
 import { LandingCountry, photos } from "./shared";
 
 const points = [
@@ -21,7 +22,7 @@ const points = [
 export function Features({ countries }: { countries: LandingCountry[] }) {
   const top = countries.slice(0, 3);
   return (
-    <section id="features" className="bg-white py-24 sm:py-32">
+    <section id="features" className="relative z-20 bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-8">
         <Reveal className="flex items-center gap-4">
           <span className="chip">Why Vyntra</span>
@@ -56,9 +57,9 @@ export function Features({ countries }: { countries: LandingCountry[] }) {
             <div className="glass rounded-2xl p-5">
               <CardTitle title="Wallet overview" />
               <div className="mt-4 grid grid-cols-3 gap-2 text-[11px]">
-                <Stat label="Balance" value="₦45,500" />
-                <Stat label="Top-ups" value="+₦20,000" />
-                <Stat label="Numbers" value="3" />
+                <Stat label="Balance" value={<Counter to={45500} prefix="₦" />} />
+                <Stat label="Top-ups" value={<Counter to={20000} prefix="+₦" />} />
+                <Stat label="Numbers" value={<Counter to={3} />} />
               </div>
               <div className="mt-4 flex h-10 overflow-hidden rounded-md">
                 <div className="w-1/2 bg-white/70" />
@@ -69,18 +70,35 @@ export function Features({ countries }: { countries: LandingCountry[] }) {
                 {top.map((c) => (
                   <li key={c.code} className="flex items-center justify-between border-t border-white/15 pt-2">
                     <span className="flex items-center gap-2"><Flag code={c.code} size={16} /> {c.name}</span>
-                    <span className="opacity-80">{naira(c.priceMonthlyKobo)}</span>
+                    <span className="opacity-80"><Counter to={c.priceMonthlyKobo / 100} prefix="₦" /></span>
                   </li>
                 ))}
               </ul>
             </div>
           </PhotoCard>
 
-          <PhotoCard src={photos.greenForest} delay={100}>
+          {/* This card travels down into the "Number health" card in the next section. */}
+          <Reveal delay={100}>
+            <HandoffCard
+              photo={
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photos.greenForest} alt="" loading="lazy" className="absolute inset-0 h-full w-full scale-110 object-cover blur-[2px]" />
+                  <div className="absolute inset-0 bg-black/10" />
+                </>
+              }
+              finale={
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photos.greenHills} alt="" loading="lazy" className="absolute inset-0 h-full w-full scale-125 object-cover blur-2xl" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-moss/30 via-moss/60 to-black/80" />
+                </>
+              }
+              panel={
             <div className="rounded-2xl border border-white/15 bg-black/45 p-5 text-white shadow-[0_20px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl">
               <CardTitle title="Inbox" />
               <div className="mt-5 flex items-end gap-2">
-                <span className="text-6xl font-light tracking-tight">24/7</span>
+                <span className="text-6xl font-light tracking-tight"><Counter to={24} suffix="/7" duration={1.6} /></span>
                 <svg className="mb-3 text-lime" width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M1 11l6-6 4 4 10-8" /></svg>
               </div>
               <p className="mt-4 text-sm font-medium">Messages in real time</p>
@@ -91,12 +109,14 @@ export function Features({ countries }: { countries: LandingCountry[] }) {
                 <Stat label="Storage" value="Unlimited" />
               </div>
             </div>
-          </PhotoCard>
+              }
+            />
+          </Reveal>
 
           <PhotoCard src={photos.goldenHaze} delay={200}>
             <div className="glass rounded-2xl p-5">
               <CardTitle title="Global coverage" />
-              <div className="mt-4 text-3xl font-light tracking-tight">{countries.length} countries</div>
+              <div className="mt-4 text-3xl font-light tracking-tight"><Counter to={countries.length} suffix=" countries" duration={1.6} /></div>
               <p className="mt-1 flex items-center gap-1.5 text-[11px] opacity-70">
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-300" /> Available to buy today
               </p>
@@ -138,7 +158,7 @@ function CardTitle({ title }: { title: string }) {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
       <div className="opacity-60">{label}</div>

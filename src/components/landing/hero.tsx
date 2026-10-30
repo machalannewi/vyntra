@@ -1,17 +1,24 @@
 import Link from "next/link";
 import { Flag } from "@/components/flag";
 import { Reveal } from "@/components/reveal";
+import { Counter, Spotlight, StripeFill } from "./motion";
 import { Eyebrow, photos } from "./shared";
 
 export function Hero({ ctaHref }: { ctaHref: string }) {
   return (
     <section className="relative overflow-hidden bg-mist pt-32 sm:pt-36">
       {/* Misty landscape behind the preview, fading into the page at the top */}
-      <div className="absolute inset-x-0 bottom-0 h-[70%]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={photos.heroMist} alt="" className="h-full w-full object-cover object-bottom" />
+      {/* Hovering anywhere in the hero lights up the photo's real colour around the cursor. */}
+      <Spotlight
+        src={photos.heroMist}
+        className="absolute inset-x-0 bottom-0 h-[70%]"
+        imgClassName="object-cover object-bottom"
+        muted="grayscale(0.9) contrast(0.9) brightness(1.08)"
+        radius={300}
+        fade="linear-gradient(to bottom, transparent 0%, #000 40%)"
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-mist via-mist/40 to-transparent" />
-      </div>
+      </Spotlight>
 
       <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-8">
         <Reveal>
@@ -107,27 +114,29 @@ function DashboardPreview() {
 
           <p className="mt-6 text-[10px] uppercase tracking-widest text-black/45">Wallet balance</p>
           <div className="mt-1 flex flex-wrap items-center gap-2">
-            <span className="text-3xl font-medium tracking-tight">₦ 45,500.00</span>
-            <span className="rounded-full bg-lime px-2 py-0.5 text-[10px] font-semibold text-moss">+₦20,000</span>
-            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] text-black/50">3 active</span>
+            <span className="text-3xl font-medium tracking-tight"><Counter to={45500} prefix="₦ " decimals={2} delay={0.8} duration={2.4} /></span>
+            <span className="rounded-full bg-lime px-2 py-0.5 text-[10px] font-semibold text-moss"><Counter to={20000} prefix="+₦" delay={1} /></span>
+            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] text-black/50"><Counter to={3} suffix=" active" delay={1} /></span>
           </div>
 
           <div className="mt-5 grid grid-cols-3 gap-3 text-xs">
             {[
-              { v: "3", l: "Numbers" },
-              { v: "128", l: "Messages" },
-              { v: "12 days", l: "Next renewal" },
+              { v: 3, s: "", l: "Numbers" },
+              { v: 128, s: "", l: "Messages" },
+              { v: 12, s: " days", l: "Next renewal" },
             ].map((s) => (
               <div key={s.l}>
-                <div className="font-semibold">{s.v}</div>
+                <div className="font-semibold"><Counter to={s.v} suffix={s.s} delay={1.1} /></div>
                 <div className="text-[10px] text-black/40">{s.l}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-5 grid grid-cols-[1fr_1.4fr] gap-1">
-            <div className="hatch h-20 rounded-md bg-neutral-50" />
-            <div className="hatch h-20 rounded-md bg-neutral-100" />
+          {/* Striped activity bars fill in from left to right. */}
+          <div className="relative mt-5 grid h-20 grid-cols-[1fr_1.4fr] gap-1">
+            <div className="rounded-md bg-neutral-50" />
+            <div className="rounded-md bg-neutral-100" />
+            <StripeFill className="hatch absolute inset-0 rounded-md" delay={1.2} duration={2.2} />
           </div>
 
           <div className="mt-5 grid gap-3 text-[11px] sm:grid-cols-3">

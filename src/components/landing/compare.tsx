@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/reveal";
 import { naira } from "@/lib/money";
+import { InViewGroup } from "./motion";
 import { Check, Eyebrow, photos } from "./shared";
 
 const rows: { label: string; other: boolean }[] = [
@@ -9,6 +10,10 @@ const rows: { label: string; other: boolean }[] = [
   { label: "Instant activation", other: true },
   { label: "Cancel any time", other: false },
 ];
+
+// The "Other providers" column starts tucked behind the lime Vyntra column and slides out once in view.
+const SLIDE = "transition-[clip-path,translate,opacity] duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] delay-[700ms]";
+const HIDDEN = `${SLIDE} z-0 -translate-x-[140px] opacity-0 group-data-[shown=true]:translate-x-0 group-data-[shown=true]:opacity-100`;
 
 export function Compare({ cheapest }: { cheapest: number }) {
   const n = rows.length;
@@ -37,12 +42,12 @@ export function Compare({ cheapest }: { cheapest: number }) {
         </div>
 
         <Reveal delay={300} className="mx-auto mt-14 max-w-3xl overflow-x-auto">
-          <div
+          <InViewGroup
             className="relative grid min-w-[520px] grid-cols-[1fr_150px_130px] text-sm"
             style={{ gridTemplateRows: `56px repeat(${n}, 48px) 72px` }}
           >
             {/* Backgrounds */}
-            <div className="rounded-2xl bg-black/35 backdrop-blur-md" style={{ gridColumn: "1 / -1", gridRow: `2 / span ${n}` }} />
+            <div className={`rounded-2xl bg-black/35 backdrop-blur-md ${SLIDE} [clip-path:inset(0_130px_0_0_round_16px)] group-data-[shown=true]:[clip-path:inset(0_0_0_0_round_16px)]`} style={{ gridColumn: "1 / -1", gridRow: `2 / span ${n}` }} />
             <div className="z-10 rounded-2xl bg-lime shadow-[0_30px_80px_rgba(0,0,0,0.25)]" style={{ gridColumn: 2, gridRow: `1 / span ${n + 2}` }} />
 
             {/* Header */}
@@ -50,7 +55,7 @@ export function Compare({ cheapest }: { cheapest: number }) {
             <div className="z-20 flex items-center justify-center gap-1.5 text-lg font-bold tracking-[-0.04em] text-ink" style={{ gridColumn: 2, gridRow: 1 }}>
               vyntra
             </div>
-            <div className="z-20 self-end pb-3 text-center text-xs text-white/70" style={{ gridColumn: 3, gridRow: 1 }}>Other providers</div>
+            <div className={`self-end pb-3 text-center text-xs text-white/70 ${HIDDEN}`} style={{ gridColumn: 3, gridRow: 1 }}>Other providers</div>
 
             {rows.map((r, i) => (
               <Row key={r.label} row={i + 2} label={r.label} other={r.other} />
@@ -64,10 +69,10 @@ export function Compare({ cheapest }: { cheapest: number }) {
             <div className="z-20 self-center text-center font-semibold text-ink" style={{ gridColumn: 2, gridRow: n + 2 }}>
               {naira(cheapest)}
             </div>
-            <div className="z-20 self-center text-center text-xs text-white/80" style={{ gridColumn: 3, gridRow: n + 2 }}>
+            <div className={`self-center text-center text-xs text-white/80 ${HIDDEN}`} style={{ gridColumn: 3, gridRow: n + 2 }}>
               Dollars + FX fees
             </div>
-          </div>
+          </InViewGroup>
         </Reveal>
       </div>
     </section>
@@ -81,7 +86,7 @@ function Row({ row, label, other }: { row: number; label: string; other: boolean
       <div className="z-20 grid place-items-center text-ink" style={{ gridColumn: 2, gridRow: row }}>
         <Check />
       </div>
-      <div className="z-20 grid place-items-center text-xs" style={{ gridColumn: 3, gridRow: row }}>
+      <div className={`grid place-items-center text-xs ${HIDDEN}`} style={{ gridColumn: 3, gridRow: row }}>
         {other ? <Check /> : <span className="text-white/60">Absent</span>}
       </div>
     </>

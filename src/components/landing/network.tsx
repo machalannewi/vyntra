@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, type Variants } from "framer-motion";
 import { Reveal } from "@/components/reveal";
 
 // Diagram coordinates in a 1000 x 440 viewBox.
@@ -28,6 +31,26 @@ const capabilities = [
   },
 ];
 
+// Scale SVG pieces around their own centre.
+const origin = { transformBox: "fill-box", transformOrigin: "center" } as const;
+
+const coreIn: Variants = {
+  hidden: { opacity: 0, scale: 0.35, y: 30 },
+  show: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 70, damping: 8, mass: 1.4, opacity: { duration: 0.8 } } },
+};
+const pop = (delay: number): Variants => ({
+  hidden: { opacity: 0, scale: 0 },
+  show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 260, damping: 11, delay } },
+});
+const draw = (delay: number): Variants => ({
+  hidden: { pathLength: 0, opacity: 0 },
+  show: { pathLength: 1, opacity: 1, transition: { duration: 0.9, delay, ease: "easeOut" } },
+});
+const fade = (delay: number): Variants => ({
+  hidden: { opacity: 0, y: 6 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, delay } },
+});
+
 export function Network() {
   return (
     <section className="relative overflow-hidden bg-white">
@@ -43,42 +66,58 @@ export function Network() {
         </Reveal>
 
         <Reveal delay={150} className="mt-6">
-          <svg viewBox="0 0 1000 440" className="w-full" role="img" aria-label="Your naira wallet connects through Vyntra to numbers in the US, UK, Canada and Europe">
+          <motion.svg
+            viewBox="0 0 1000 440"
+            className="w-full"
+            role="img"
+            aria-label="Your naira wallet connects through Vyntra to numbers in the US, UK, Canada and Europe"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.45 }}
+          >
             {nodes.map((n, i) => (
               <g key={i}>
-                <line x1={CORE.x} y1={CORE.y} x2={n.x} y2={n.y} stroke="rgba(0,0,0,0.18)" strokeWidth="1.2" />
-                {n.end && <line x1={n.x} y1={n.y} x2={n.end[0]} y2={n.end[1]} stroke="rgba(0,0,0,0.12)" strokeWidth="1" />}
-                {n.end && <rect x={n.end[0] - 4} y={n.end[1] - 4} width="8" height="8" fill="white" stroke="rgba(0,0,0,0.2)" />}
-                {n.square ? (
-                  <rect x={n.x - 8} y={n.y - 8} width="16" height="16" fill="#f4f4f1" stroke="rgba(0,0,0,0.2)" />
-                ) : (
-                  <circle cx={n.x} cy={n.y} r="9" fill="#5b6b43" stroke="white" strokeWidth="3" />
-                )}
-                {n.label.map((l, j) => (
-                  <text key={j} x={n.x + (n.x < CORE.x ? -40 : -20)} y={n.y + 26 + j * 14} fontSize="11" fill="rgba(0,0,0,0.5)" letterSpacing="0.6">
-                    {l}
-                  </text>
-                ))}
+                <motion.line x1={CORE.x} y1={CORE.y} x2={n.x} y2={n.y} stroke="rgba(0,0,0,0.18)" strokeWidth="1.2" variants={draw(0.9 + i * 0.12)} />
+                {n.end && <motion.line x1={n.x} y1={n.y} x2={n.end[0]} y2={n.end[1]} stroke="rgba(0,0,0,0.12)" strokeWidth="1" variants={draw(1.5 + i * 0.12)} />}
+                {n.end && <motion.rect x={n.end[0] - 4} y={n.end[1] - 4} width="8" height="8" fill="white" stroke="rgba(0,0,0,0.2)" style={origin} variants={pop(1.9 + i * 0.12)} />}
+                <motion.g style={origin} variants={pop(1.4 + i * 0.12)}>
+                  {n.square ? (
+                    <rect x={n.x - 8} y={n.y - 8} width="16" height="16" fill="#f4f4f1" stroke="rgba(0,0,0,0.2)" />
+                  ) : (
+                    <circle cx={n.x} cy={n.y} r="9" fill="#5b6b43" stroke="white" strokeWidth="3" />
+                  )}
+                </motion.g>
+                <motion.g variants={fade(1.6 + i * 0.12)}>
+                  {n.label.map((l, j) => (
+                    <text key={j} x={n.x + (n.x < CORE.x ? -40 : -20)} y={n.y + 26 + j * 14} fontSize="11" fill="rgba(0,0,0,0.5)" letterSpacing="0.6">
+                      {l}
+                    </text>
+                  ))}
+                </motion.g>
               </g>
             ))}
 
-            {/* Core node with corner brackets */}
-            <text x={CORE.x} y={CORE.y - 52} textAnchor="middle" fontSize="12" fontWeight="600" fill="#0b0b0c" letterSpacing="0.6">VYNTRA CORE</text>
-            {[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy], i) => (
-              <path
-                key={i}
-                d={`M${CORE.x + sx * 34} ${CORE.y + sy * 22} V${CORE.y + sy * 34} H${CORE.x + sx * 22}`}
-                fill="none"
-                stroke="rgba(0,0,0,0.35)"
-                strokeWidth="1.2"
-              />
-            ))}
-            <circle cx={CORE.x} cy={CORE.y} r="13" fill="#5b6b43" />
-            <circle cx={CORE.x} cy={CORE.y} r="5" fill="#e6edc1" />
+            {/* Core node with corner brackets: rises in slowly and settles with a small bounce. */}
+            <motion.g style={origin} variants={coreIn}>
+              <text x={CORE.x} y={CORE.y - 52} textAnchor="middle" fontSize="12" fontWeight="600" fill="#0b0b0c" letterSpacing="0.6">VYNTRA CORE</text>
+              {[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy], i) => (
+                <path
+                  key={i}
+                  d={`M${CORE.x + sx * 34} ${CORE.y + sy * 22} V${CORE.y + sy * 34} H${CORE.x + sx * 22}`}
+                  fill="none"
+                  stroke="rgba(0,0,0,0.35)"
+                  strokeWidth="1.2"
+                />
+              ))}
+              <circle cx={CORE.x} cy={CORE.y} r="13" fill="#5b6b43" />
+              <circle cx={CORE.x} cy={CORE.y} r="5" fill="#e6edc1" />
+            </motion.g>
             {["Instant provisioning", "Live SMS routing", "Secure naira payments"].map((t, i) => (
-              <text key={t} x={CORE.x} y={CORE.y + 62 + i * 15} textAnchor="middle" fontSize="11" fill="rgba(0,0,0,0.38)">{t}</text>
+              <motion.text key={t} x={CORE.x} y={CORE.y + 62 + i * 15} textAnchor="middle" fontSize="11" fill="rgba(0,0,0,0.38)" variants={fade(0.9 + i * 0.15)}>
+                {t}
+              </motion.text>
             ))}
-          </svg>
+          </motion.svg>
         </Reveal>
       </div>
 

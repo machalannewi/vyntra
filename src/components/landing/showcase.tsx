@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Reveal } from "@/components/reveal";
-import { naira } from "@/lib/money";
+import { Counter, Spotlight, Tilt } from "./motion";
 import { Arrow, Check, photos } from "./shared";
 
 const checklist = ["Number active", "Inbox synced", "Renewal in 12 days", "Paid in naira"];
@@ -8,14 +8,15 @@ const checklist = ["Number active", "Inbox synced", "Renewal in 12 days", "Paid 
 export function Showcase({ cheapest, ctaHref }: { cheapest: number; ctaHref: string }) {
   return (
     <section className="relative overflow-hidden bg-[#e7e8e4]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={photos.mistyForest} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-80" />
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-white/10 to-white/70" />
+      <Spotlight src={photos.mistyForest} className="absolute inset-0" fade="linear-gradient(to bottom, transparent 5%, #000 35%, #000 80%, transparent)">
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/10 to-white/70" />
+      </Spotlight>
 
       <div className="relative mx-auto flex min-h-[720px] max-w-7xl items-center justify-center px-4 py-24">
         <Reveal className="relative">
-          {/* Central dark-green card */}
-          <div className="relative h-[440px] w-[300px] overflow-hidden rounded-3xl shadow-[0_40px_100px_rgba(0,0,0,0.35)] sm:w-[340px]">
+          {/* Central dark-green card: the middle "Why Vyntra" card lands here, then it tilts towards the mouse. */}
+          <Tilt className="relative rounded-3xl">
+          <div data-handoff-target className="relative h-[440px] w-[300px] overflow-hidden rounded-3xl shadow-[0_40px_100px_rgba(0,0,0,0.35)] transition-opacity duration-300 sm:w-[340px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photos.greenHills} alt="" loading="lazy" className="absolute inset-0 h-full w-full scale-125 object-cover blur-2xl" />
             <div className="absolute inset-0 bg-gradient-to-b from-moss/30 via-moss/60 to-black/80" />
@@ -38,7 +39,7 @@ export function Showcase({ cheapest, ctaHref }: { cheapest: number; ctaHref: str
                     <circle key={x} cx={x} cy={y} r="2.5" fill="white" />
                   ))}
                 </svg>
-                <span className="absolute left-1/2 top-0 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-ink">100%</span>
+                <span className="absolute left-1/2 top-0 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-ink"><Counter to={100} suffix="%" /></span>
               </div>
               <ul className="mt-4 space-y-2.5 text-xs">
                 {checklist.map((c) => (
@@ -50,12 +51,13 @@ export function Showcase({ cheapest, ctaHref }: { cheapest: number; ctaHref: str
               </ul>
             </div>
           </div>
+          </Tilt>
 
           {/* Floating price card */}
           <div className="absolute -left-6 top-10 w-56 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] backdrop-blur-xl sm:-left-36">
             <div className="flex items-start justify-between">
               <div>
-                <div className="text-2xl font-medium tracking-tight">{naira(cheapest)}</div>
+                <div className="text-2xl font-medium tracking-tight"><Counter to={cheapest / 100} prefix="₦" /></div>
                 <div className="text-[11px] text-black/45">Your number, 30 days</div>
               </div>
               <span className="grid h-4 w-4 place-items-center rounded-full border border-black/30 text-[9px] text-black/50">i</span>

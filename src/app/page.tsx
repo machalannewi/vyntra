@@ -5,6 +5,7 @@ import { Features } from "@/components/landing/features";
 import { Hero } from "@/components/landing/hero";
 import { Network } from "@/components/landing/network";
 import type { LandingCountry } from "@/components/landing/shared";
+import { Stack } from "@/components/landing/motion";
 import { Showcase } from "@/components/landing/showcase";
 import { SiteHeader } from "@/components/landing/site-header";
 import { currentUser } from "@/lib/auth";
@@ -44,12 +45,24 @@ export default async function Home() {
     <div className="overflow-x-clip">
       <SiteHeader dashboardHref={dashboardHref} />
       <main>
-        <Hero ctaHref={ctaHref} />
-        <Features countries={countries} />
-        <Showcase cheapest={cheapest} ctaHref={ctaHref} />
-        <Network />
-        <Coverage countries={countries} />
-        <Compare cheapest={cheapest} />
+        {/* Like the BOJA site, each section shrinks away with rounded corners as the next one rises over it. */}
+        <Stack under="#ffffff">
+          <Hero ctaHref={ctaHref} />
+        </Stack>
+        <Stack under="#ffffff">
+          {/* Kept together so the middle "Why Vyntra" card can travel down into the showcase card. */}
+          <Features countries={countries} />
+          <Showcase cheapest={cheapest} ctaHref={ctaHref} />
+        </Stack>
+        <Stack under="#ffffff">
+          <Network />
+        </Stack>
+        <Stack under="#b8b9b5">
+          <Coverage countries={countries} />
+        </Stack>
+        <Stack under="#ffffff">
+          <Compare cheapest={cheapest} />
+        </Stack>
         <Closing ctaHref={dashboardHref ?? ctaHref} loggedIn={Boolean(user)} />
       </main>
     </div>
