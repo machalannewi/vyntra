@@ -4,7 +4,7 @@ export function numberStatus(n: { status: string; expiresAt: Date }) {
 }
 
 export const statusStyles: Record<string, string> = {
-  ACTIVE: "bg-emerald-50 text-emerald-700",
+  ACTIVE: "bg-lime text-moss",
   EXPIRED: "bg-amber-50 text-amber-700",
-  RELEASED: "bg-slate-100 text-slate-500",
+  RELEASED: "bg-neutral-100 text-black/45",
 };

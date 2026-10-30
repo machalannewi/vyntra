@@ -9,8 +9,8 @@ export default async function BuyPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Buy a number</h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <h1 className="text-3xl font-medium tracking-tight">Buy a number</h1>
+      <p className="mt-1 text-sm text-black/50">
         The price is taken from your wallet balance of <strong>{naira(user.balanceKobo)}</strong>. You get the number right away.
       </p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

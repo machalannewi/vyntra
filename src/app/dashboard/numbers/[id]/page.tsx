@@ -37,13 +37,13 @@ export default async function NumberPage({
             <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusStyles[status]}`}>{status}</span>
           </div>
           <div className="mt-4 flex items-center justify-between gap-2">
-            <span className="font-mono text-xl font-bold">{phone.number}</span>
+            <span className="font-mono text-xl font-medium tracking-tight">{phone.number}</span>
             <CopyButton text={phone.number} />
           </div>
           <dl className="mt-4 space-y-1 text-sm">
-            <div className="flex justify-between"><dt className="text-slate-500">Country</dt><dd>{phone.country.name}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Expires</dt><dd>{phone.expiresAt.toLocaleString("en-NG")}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Renewal</dt><dd>{naira(phone.country.priceMonthlyKobo)} / 30 days</dd></div>
+            <div className="flex justify-between"><dt className="text-black/45">Country</dt><dd>{phone.country.name}</dd></div>
+            <div className="flex justify-between"><dt className="text-black/45">Expires</dt><dd>{phone.expiresAt.toLocaleString("en-NG")}</dd></div>
+            <div className="flex justify-between"><dt className="text-black/45">Renewal</dt><dd>{naira(phone.country.priceMonthlyKobo)} / 30 days</dd></div>
           </dl>
         </div>
 
@@ -58,13 +58,13 @@ export default async function NumberPage({
               <input type="hidden" name="id" value={phone.id} />
               <SubmitButton className="btn-danger w-full">Release number</SubmitButton>
             </form>
-            <p className="text-xs text-slate-500">If you release a number, it stops receiving messages straight away and you can't get it back.</p>
+            <p className="text-xs text-black/45">If you release a number, it stops receiving messages straight away and you can't get it back.</p>
           </div>
         )}
       </div>
 
       <div className="card overflow-hidden">
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-black/[0.06] px-6 py-4">
           <h2 className="font-semibold">Inbox</h2>
           <div className="flex items-center gap-3">
             {canSimulate && status === "ACTIVE" && (
@@ -77,13 +77,13 @@ export default async function NumberPage({
           </div>
         </div>
         {phone.messages.length === 0 ? (
-          <p className="px-6 py-16 text-center text-sm text-slate-500">No messages yet. New texts will show up here automatically.</p>
+          <p className="px-6 py-16 text-center text-sm text-black/45">No messages yet. New texts will show up here automatically.</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-black/5">
             {phone.messages.map((m) => (
               <li key={m.id} className="px-6 py-4">
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span className="font-semibold text-slate-700">{m.from}</span>
+                <div className="flex justify-between text-xs text-black/45">
+                  <span className="font-semibold text-ink">{m.from}</span>
                   <span>{m.receivedAt.toLocaleString("en-NG")}</span>
                 </div>
                 <p className="mt-1 text-sm">{m.body}</p>

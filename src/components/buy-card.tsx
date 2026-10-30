@@ -22,11 +22,11 @@ export function BuyCard({
         <Flag code={country.code} />
         <div>
           <div className="font-semibold">{country.name}</div>
-          <div className="text-xs text-slate-500">{country.dialCode}</div>
+          <div className="text-xs text-black/45">{country.dialCode}</div>
         </div>
       </div>
-      <div className="mt-5 text-2xl font-bold">{priceLabel}</div>
-      <div className="text-xs text-slate-500">per 30 days</div>
+      <div className="mt-5 text-3xl font-medium tracking-tight">{priceLabel}</div>
+      <div className="text-xs text-black/45">per 30 days</div>
       {state?.error && <p className="mt-3 text-xs text-red-600">{state.error}</p>}
       <div className="mt-5">
         {affordable ? (

@@ -11,8 +11,8 @@ export function LiveRefresh({ intervalMs = 5000 }: { intervalMs?: number }) {
     return () => clearInterval(id);
   }, [router, intervalMs]);
   return (
-    <span className="flex items-center gap-1.5 text-xs text-slate-500">
-      <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" /> Live
+    <span className="flex items-center gap-1.5 text-xs text-black/45">
+      <span className="h-2 w-2 animate-pulse rounded-full bg-moss" /> Live
     </span>
   );
 }

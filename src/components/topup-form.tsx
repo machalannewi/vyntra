@@ -18,8 +18,8 @@ export function TopupForm({ simulated }: { simulated: boolean }) {
             type="button"
             key={p}
             onClick={() => setAmount(String(p))}
-            className={`rounded-lg border px-2 py-2 text-sm font-semibold ${
-              amount === String(p) ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-200 hover:bg-slate-50"
+            className={`rounded-full border px-2 py-2 text-sm font-semibold ${
+              amount === String(p) ? "border-ink bg-ink text-white" : "border-black/[0.06] hover:bg-neutral-50"
             }`}
           >
             ₦{p.toLocaleString()}

@@ -28,22 +28,22 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold">Admin</h1>
+      <h1 className="text-3xl font-medium tracking-tight">Admin</h1>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <div key={s.label} className="card p-5">
-            <div className="text-sm text-slate-500">{s.label}</div>
-            <div className="mt-1 text-2xl font-bold">{s.value}</div>
+            <div className="text-sm text-black/45">{s.label}</div>
+            <div className="mt-1 text-3xl font-medium tracking-tight">{s.value}</div>
           </div>
         ))}
       </div>
 
       <section className="card overflow-hidden">
-        <h2 className="border-b border-slate-200 px-6 py-4 font-semibold">Countries & pricing</h2>
+        <h2 className="border-b border-black/[0.06] px-6 py-4 font-semibold">Countries & pricing</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-neutral-50 text-left text-xs uppercase text-black/45">
               <tr>
                 <th className="px-6 py-3">Country</th>
                 <th className="px-6 py-3">Numbers sold</th>
@@ -52,11 +52,11 @@ export default async function AdminPage() {
                 <th className="px-6 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-black/5">
               {countries.map((c) => (
                 <tr key={c.code}>
                   <td className="px-6 py-3">
-                    <span className="flex items-center gap-2"><Flag code={c.code} size={20} /> {c.name} <span className="text-slate-400">{c.dialCode}</span></span>
+                    <span className="flex items-center gap-2"><Flag code={c.code} size={20} /> {c.name} <span className="text-black/30">{c.dialCode}</span></span>
                   </td>
                   <td className="px-6 py-3">{c._count.numbers}</td>
                   <td className="px-6 py-3" colSpan={3}>
@@ -72,7 +72,7 @@ export default async function AdminPage() {
             </tbody>
           </table>
         </div>
-        <form action={addCountry} className="flex flex-wrap items-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4">
+        <form action={addCountry} className="flex flex-wrap items-end gap-3 border-t border-black/[0.06] bg-neutral-50 px-6 py-4">
           <label className="text-xs font-medium">ISO code<input name="code" placeholder="IE" maxLength={2} className="input mt-1 w-20" /></label>
           <label className="text-xs font-medium">Name<input name="name" placeholder="Ireland" className="input mt-1 w-44" /></label>
           <label className="text-xs font-medium">Dial code<input name="dialCode" placeholder="+353" className="input mt-1 w-24" /></label>
@@ -82,10 +82,10 @@ export default async function AdminPage() {
       </section>
 
       <section className="card overflow-hidden">
-        <h2 className="border-b border-slate-200 px-6 py-4 font-semibold">Users</h2>
+        <h2 className="border-b border-black/[0.06] px-6 py-4 font-semibold">Users</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-neutral-50 text-left text-xs uppercase text-black/45">
               <tr>
                 <th className="px-6 py-3">User</th>
                 <th className="px-6 py-3">Numbers</th>
@@ -93,12 +93,12 @@ export default async function AdminPage() {
                 <th className="px-6 py-3">Adjust balance (₦, use − to deduct)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-black/5">
               {users.map((u) => (
                 <tr key={u.id}>
                   <td className="px-6 py-3">
                     <div className="font-medium">{u.name} {u.role === "ADMIN" && <span className="text-xs text-brand-600">admin</span>}</div>
-                    <div className="text-xs text-slate-500">{u.email}</div>
+                    <div className="text-xs text-black/45">{u.email}</div>
                   </td>
                   <td className="px-6 py-3">{u._count.numbers}</td>
                   <td className="px-6 py-3 font-semibold">{naira(u.balanceKobo)}</td>
@@ -118,10 +118,10 @@ export default async function AdminPage() {
       </section>
 
       <section className="card overflow-hidden">
-        <h2 className="border-b border-slate-200 px-6 py-4 font-semibold">Recent transactions</h2>
+        <h2 className="border-b border-black/[0.06] px-6 py-4 font-semibold">Recent transactions</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-neutral-50 text-left text-xs uppercase text-black/45">
               <tr>
                 <th className="px-6 py-3">Date</th>
                 <th className="px-6 py-3">User</th>
@@ -131,14 +131,14 @@ export default async function AdminPage() {
                 <th className="px-6 py-3 text-right">Amount</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-black/5">
               {recent.map((t) => (
                 <tr key={t.id}>
-                  <td className="whitespace-nowrap px-6 py-3 text-slate-500">{t.createdAt.toLocaleString("en-NG")}</td>
+                  <td className="whitespace-nowrap px-6 py-3 text-black/45">{t.createdAt.toLocaleString("en-NG")}</td>
                   <td className="px-6 py-3">{t.user.email}</td>
                   <td className="px-6 py-3 text-xs font-semibold">{t.type}</td>
                   <td className="px-6 py-3">{t.note}</td>
-                  <td className="px-6 py-3 text-xs text-slate-500">{t.status}</td>
+                  <td className="px-6 py-3 text-xs text-black/45">{t.status}</td>
                   <td className="whitespace-nowrap px-6 py-3 text-right font-semibold">
                     {t.amountKobo > 0 ? "+" : "−"}{naira(Math.abs(t.amountKobo))}
                   </td>
