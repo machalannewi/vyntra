@@ -14,25 +14,25 @@ export function AppShell({
 }) {
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="bg-ink text-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-4">
             <Logo />
-            <nav className="flex gap-1 overflow-x-auto text-sm [scrollbar-width:none]">
+            <nav className="flex gap-1 overflow-x-auto text-[11px] font-semibold uppercase tracking-[0.08em] [scrollbar-width:none]">
               {links.map((l) => (
-                <Link key={l.href} href={l.href} className="whitespace-nowrap rounded-lg px-2.5 py-1.5 font-medium text-slate-600 hover:bg-slate-100 hover:text-ink">
+                <Link key={l.href} href={l.href} className="whitespace-nowrap rounded-full px-3 py-1.5 text-white/70 hover:bg-white/10 hover:text-white">
                   {l.label}
                 </Link>
               ))}
             </nav>
           </div>
-          <div className="flex items-center gap-3 text-sm">
-            <Link href="/dashboard/wallet" className="rounded-lg bg-brand-50 px-3 py-1.5 font-semibold text-brand-700">
+          <div className="flex items-center gap-3 text-xs">
+            <Link href="/dashboard/wallet" className="rounded-full bg-white px-3 py-1.5 font-semibold text-ink">
               {naira(user.balanceKobo)}
             </Link>
-            <span className="hidden text-slate-600 sm:inline">{user.name}</span>
+            <span className="hidden text-white/60 sm:inline">{user.name}</span>
             <form action={logout}>
-              <button className="text-slate-500 hover:text-ink">Log out</button>
+              <button className="rounded-full bg-white/10 px-3 py-1.5 text-white/80 hover:bg-white/20 hover:text-white">Log out</button>
             </form>
           </div>
         </div>

@@ -2,37 +2,87 @@
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-ink: #0f172a;
+  /* Neutral, near-black brand used across the app */
+  --color-brand-50: #f1f1ee;
+  --color-brand-100: #e4e4df;
+  --color-brand-500: #3f3f3c;
+  --color-brand-600: #141414;
+  --color-brand-700: #000000;
+  --color-ink: #0b0b0c;
+  --color-mist: #f2f2ef;
+  --color-lime: #e6edc1;
+  --color-moss: #3d4a2b;
 }
 
 body {
-  @apply bg-slate-50 text-ink antialiased;
+  @apply bg-mist text-ink antialiased;
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-2xl border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)];
   }
 
   .input {
-    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100;
+    @apply w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:border-black/40 focus:ring-2 focus:ring-black/5;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-md border border-black/10 bg-white px-2 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-black/60;
+  }
+
+  .glass {
+    @apply border border-white/25 bg-white/15 text-white shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-xl;
   }
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
 }
 @utility btn-primary {
   @apply btn bg-brand-600 text-white hover:bg-brand-700;
 }
 @utility btn-ghost {
-  @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+  @apply btn border border-black/10 bg-white text-ink hover:bg-black/[0.03];
 }
 @utility btn-danger {
   @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
+}
+
+/* Scroll reveal: text and blocks fade in from a blur, like the hero headline. */
+.reveal {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(18px);
+  transition:
+    opacity 1s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 1s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+}
+
+.hatch {
+  background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.14) 0 1px, transparent 1px 5px);
+}
+.hatch-light {
+  background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0 1px, transparent 1px 6px);
+}
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
